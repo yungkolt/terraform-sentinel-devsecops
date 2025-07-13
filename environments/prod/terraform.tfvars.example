@@ -1,0 +1,15 @@
+# Rename this file to terraform.tfvars and update with your values
+
+resource_group_name = "rg-sentinel-prod"
+location            = "eastus"
+workspace_name      = "law-sentinel-prod"
+retention_in_days   = 90
+daily_quota_gb      = 10
+
+tags = {
+  Environment  = "Production"
+  ManagedBy    = "Terraform"
+  Project      = "Sentinel-DevSecOps"
+  Owner        = "security-team@yourcompany.com"
+  CostCenter   = "Security-001"
+}
