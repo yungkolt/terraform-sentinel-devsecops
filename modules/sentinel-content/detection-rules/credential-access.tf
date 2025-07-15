@@ -16,7 +16,7 @@ resource "azurerm_sentinel_alert_rule_scheduled" "brute_force_attack" {
 
   query = <<-EOQ
     let threshold = 10;
-    let timeframe = 10m;
+    let timeframe = 15m;
     SigninLogs
     | where TimeGenerated > ago(timeframe)
     | where ResultType != 0
