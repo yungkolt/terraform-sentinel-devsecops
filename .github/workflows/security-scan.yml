@@ -17,7 +17,7 @@ jobs:
     name: TFSec Security Scan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Run tfsec
         uses: aquasecurity/tfsec-action@v1.0.0
@@ -31,7 +31,7 @@ jobs:
       contents: read
       security-events: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Run Checkov
         uses: bridgecrewio/checkov-action@master
