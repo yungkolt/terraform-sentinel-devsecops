@@ -51,5 +51,6 @@ module "sentinel" {
   source = "../../modules/sentinel"
 
   workspace_id = module.log_analytics.workspace_id
+  location     = azurerm_resource_group.main.location
   enable_ueba  = true
 }

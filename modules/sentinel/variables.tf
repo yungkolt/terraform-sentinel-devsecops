@@ -3,6 +3,12 @@ variable "workspace_id" {
   type        = string
 }
 
+variable "location" {
+  description = "Azure region for workbook deployment"
+  type        = string
+  default     = "eastus"
+}
+
 variable "enable_ueba" {
   description = "Enable User Entity Behavior Analytics"
   type        = bool
