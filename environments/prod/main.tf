@@ -7,12 +7,12 @@ terraform {
   }
 
   backend "azurerm" {
-    # Configure your backend here
-    # resource_group_name  = "terraform-state-rg"
-    # storage_account_name = "tfstate${var.org_name}"
-    # container_name       = "tfstate"
-    # key                  = "sentinel-prod.terraform.tfstate"
-  }
+  resource_group_name  = "terraform-state-rg"
+  storage_account_name = "tfstate${random_string.suffix.result}"
+  container_name       = "tfstate"
+  key                  = "sentinel-prod.terraform.tfstate"
+  use_azuread_auth    = true  # Best practice for authentication
+ }
 }
 
 provider "azurerm" {
