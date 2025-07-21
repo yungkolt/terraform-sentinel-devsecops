@@ -44,5 +44,4 @@ resource "azurerm_sentinel_workbook" "soc_dashboard" {
     ]
   })
   
-  tags = var.tags
 }
