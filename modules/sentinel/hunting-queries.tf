@@ -5,8 +5,8 @@ resource "azurerm_log_analytics_saved_search" "dormant_accounts" {
   name                       = "DormantAccountReactivation"
   log_analytics_workspace_id = var.workspace_id
   category                   = "Threat Hunting"
-  display_name              = "Dormant Account Reactivation"
-  
+  display_name               = "Dormant Account Reactivation"
+
   query = <<-EOQ
     let dormantDays = 90d;
     let lookback = 120d;
@@ -33,8 +33,8 @@ resource "azurerm_log_analytics_saved_search" "data_staging" {
   name                       = "DataStagingActivity"
   log_analytics_workspace_id = var.workspace_id
   category                   = "Threat Hunting"
-  display_name              = "Potential Data Staging"
-  
+  display_name               = "Potential Data Staging"
+
   query = <<-EOQ
     DeviceFileEvents
     | where TimeGenerated > ago(24h)
@@ -46,7 +46,7 @@ resource "azurerm_log_analytics_saved_search" "data_staging" {
   EOQ
 
   tags = {
-    Purpose = "Threat Hunting"  
+    Purpose = "Threat Hunting"
     Tactics = "Collection,Exfiltration"
   }
 }

@@ -13,7 +13,7 @@ variable "rule_severity_threshold" {
   description = "Minimum severity level for deployed rules"
   type        = string
   default     = "Medium"
-  
+
   validation {
     condition     = contains(["Low", "Medium", "High", "Critical"], var.rule_severity_threshold)
     error_message = "Severity threshold must be one of: Low, Medium, High, Critical."

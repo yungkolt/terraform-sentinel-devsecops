@@ -68,14 +68,14 @@ variable "tags" {
   description = "Resource tags for production environment"
   type        = map(string)
   default = {
-    Environment     = "Production"
-    ManagedBy       = "Terraform"
-    Project         = "Sentinel-DevSecOps"
-    BusinessUnit    = "Security"
-    CostCenter      = "Security-001"
-    Criticality     = "High"
-    DataClass       = "Internal"
-    Compliance      = "SOC2"
+    Environment  = "Production"
+    ManagedBy    = "Terraform"
+    Project      = "Sentinel-DevSecOps"
+    BusinessUnit = "Security"
+    CostCenter   = "Security-001"
+    Criticality  = "High"
+    DataClass    = "Internal"
+    Compliance   = "SOC2"
   }
 
   validation {

@@ -6,12 +6,12 @@
 
 terraform {
   backend "azurerm" {
-    resource_group_name   = "rg-terraform-state"
-    storage_account_name  = "tfstatesentinelprod"
-    container_name        = "tfstate"
-    key                   = "prod.terraform.tfstate"
-    use_azuread_auth     = true  # Use Azure AD for authentication
-    encrypt              = true  # Encrypt state file at rest
+    resource_group_name  = "rg-terraform-state"
+    storage_account_name = "tfstatesentinelprod"
+    container_name       = "tfstate"
+    key                  = "prod.terraform.tfstate"
+    use_azuread_auth     = true # Use Azure AD for authentication
+    encrypt              = true # Encrypt state file at rest
   }
 }
 

@@ -14,7 +14,7 @@ resource "azurerm_sentinel_alert_rule_scheduled" "brute_force_attack" {
   log_analytics_workspace_id = var.workspace_id
   display_name               = "Potential Brute Force Attack Detected"
   severity                   = "High"
-  description               = "Detects multiple failed login attempts that may indicate a brute force attack"
+  description                = "Detects multiple failed login attempts that may indicate a brute force attack"
 
   query = <<-EOQ
     let threshold = 10;
@@ -35,20 +35,20 @@ resource "azurerm_sentinel_alert_rule_scheduled" "brute_force_attack" {
               IPAddresses, FirstAttempt, LastAttempt, TimeDifference
   EOQ
 
-  query_frequency    = "PT5M"
-  query_period       = "PT10M"
-  trigger_operator   = "GreaterThan"
-  trigger_threshold  = 0
+  query_frequency   = "PT5M"
+  query_period      = "PT10M"
+  trigger_operator  = "GreaterThan"
+  trigger_threshold = 0
 
-  tactics            = ["CredentialAccess"]
-  techniques         = ["T1110"]
+  tactics    = ["CredentialAccess"]
+  techniques = ["T1110"]
 
   incident {
     create_incident_enabled = true
     grouping {
       enabled                 = true
-      lookback_duration      = "PT30M"
-      matching_method        = "AllEntities"
+      lookback_duration       = "PT30M"
+      matching_method         = "AllEntities"
       reopen_closed_incidents = true
     }
   }
@@ -62,7 +62,7 @@ resource "azurerm_sentinel_alert_rule_scheduled" "password_spray" {
   log_analytics_workspace_id = var.workspace_id
   display_name               = "Password Spray Attack Detected"
   severity                   = "High"
-  description               = "Detects password spray attacks where same password is tried across multiple accounts"
+  description                = "Detects password spray attacks where same password is tried across multiple accounts"
 
   query = <<-EOQ
     let timeframe = 30m;
@@ -80,13 +80,13 @@ resource "azurerm_sentinel_alert_rule_scheduled" "password_spray" {
     | extend AttackDuration = datetime_diff('minute', EndTime, StartTime)
   EOQ
 
-  query_frequency    = "PT15M"
-  query_period       = "PT30M"
-  trigger_operator   = "GreaterThan"
-  trigger_threshold  = 0
+  query_frequency   = "PT15M"
+  query_period      = "PT30M"
+  trigger_operator  = "GreaterThan"
+  trigger_threshold = 0
 
-  tactics            = ["CredentialAccess"]
-  techniques         = ["T1110.003"]
+  tactics    = ["CredentialAccess"]
+  techniques = ["T1110.003"]
 
   depends_on = [azurerm_sentinel_log_analytics_workspace_onboarding.main]
 }
@@ -101,7 +101,7 @@ resource "azurerm_sentinel_alert_rule_scheduled" "security_tool_tampering" {
   log_analytics_workspace_id = var.workspace_id
   display_name               = "Security Tool Tampering Detected"
   severity                   = "High"
-  description               = "Detects attempts to disable or modify security tools"
+  description                = "Detects attempts to disable or modify security tools"
 
   query = <<-EOQ
     let securityProcesses = dynamic(["MsMpEng.exe", "MsSense.exe", "SentinelAgent.exe"]);
@@ -113,13 +113,13 @@ resource "azurerm_sentinel_alert_rule_scheduled" "security_tool_tampering" {
               ProcessCommandLine, InitiatingProcessFileName
   EOQ
 
-  query_frequency    = "PT5M"
-  query_period       = "PT5M"
-  trigger_operator   = "GreaterThan"
-  trigger_threshold  = 0
+  query_frequency   = "PT5M"
+  query_period      = "PT5M"
+  trigger_operator  = "GreaterThan"
+  trigger_threshold = 0
 
-  tactics            = ["DefenseEvasion"]
-  techniques         = ["T1562.001"]
+  tactics    = ["DefenseEvasion"]
+  techniques = ["T1562.001"]
 
   depends_on = [azurerm_sentinel_log_analytics_workspace_onboarding.main]
 }
@@ -130,7 +130,7 @@ resource "azurerm_sentinel_alert_rule_scheduled" "log_clearing" {
   log_analytics_workspace_id = var.workspace_id
   display_name               = "Windows Event Log Cleared"
   severity                   = "High"
-  description               = "Detects clearing of Windows event logs"
+  description                = "Detects clearing of Windows event logs"
 
   query = <<-EOQ
     SecurityEvent
@@ -140,13 +140,13 @@ resource "azurerm_sentinel_alert_rule_scheduled" "log_clearing" {
     | project TimeGenerated, Computer, Account, LogCleared
   EOQ
 
-  query_frequency    = "PT5M"
-  query_period       = "PT5M"
-  trigger_operator   = "GreaterThan"
-  trigger_threshold  = 0
+  query_frequency   = "PT5M"
+  query_period      = "PT5M"
+  trigger_operator  = "GreaterThan"
+  trigger_threshold = 0
 
-  tactics            = ["DefenseEvasion"]
-  techniques         = ["T1070.001"]
+  tactics    = ["DefenseEvasion"]
+  techniques = ["T1070.001"]
 
   depends_on = [azurerm_sentinel_log_analytics_workspace_onboarding.main]
 }
@@ -161,7 +161,7 @@ resource "azurerm_sentinel_alert_rule_scheduled" "registry_persistence" {
   log_analytics_workspace_id = var.workspace_id
   display_name               = "Registry Run Key Persistence Detected"
   severity                   = "Medium"
-  description               = "Detects modifications to registry run keys commonly used for persistence"
+  description                = "Detects modifications to registry run keys commonly used for persistence"
 
   query = <<-EOQ
     DeviceRegistryEvents
@@ -173,13 +173,13 @@ resource "azurerm_sentinel_alert_rule_scheduled" "registry_persistence" {
               InitiatingProcessFileName, InitiatingProcessCommandLine
   EOQ
 
-  query_frequency    = "PT5M"
-  query_period       = "PT5M"
-  trigger_operator   = "GreaterThan"
-  trigger_threshold  = 0
+  query_frequency   = "PT5M"
+  query_period      = "PT5M"
+  trigger_operator  = "GreaterThan"
+  trigger_threshold = 0
 
-  tactics            = ["Persistence"]
-  techniques         = ["T1547.001"]
+  tactics    = ["Persistence"]
+  techniques = ["T1547.001"]
 
   depends_on = [azurerm_sentinel_log_analytics_workspace_onboarding.main]
 }
@@ -190,7 +190,7 @@ resource "azurerm_sentinel_alert_rule_scheduled" "scheduled_task_creation" {
   log_analytics_workspace_id = var.workspace_id
   display_name               = "Suspicious Scheduled Task Created"
   severity                   = "Medium"
-  description               = "Detects creation of scheduled tasks that may be used for persistence"
+  description                = "Detects creation of scheduled tasks that may be used for persistence"
 
   query = <<-EOQ
     DeviceProcessEvents
@@ -202,13 +202,13 @@ resource "azurerm_sentinel_alert_rule_scheduled" "scheduled_task_creation" {
               TaskName, ProcessCommandLine, InitiatingProcessFileName
   EOQ
 
-  query_frequency    = "PT10M"
-  query_period       = "PT10M"
-  trigger_operator   = "GreaterThan"
-  trigger_threshold  = 0
+  query_frequency   = "PT10M"
+  query_period      = "PT10M"
+  trigger_operator  = "GreaterThan"
+  trigger_threshold = 0
 
-  tactics            = ["Persistence", "Execution"]
-  techniques         = ["T1053.005"]
+  tactics    = ["Persistence", "Execution"]
+  techniques = ["T1053.005"]
 
   depends_on = [azurerm_sentinel_log_analytics_workspace_onboarding.main]
 }
@@ -226,14 +226,14 @@ locals {
     }
     defense_evasion = {
       security_tool_tampering = azurerm_sentinel_alert_rule_scheduled.security_tool_tampering.name
-      log_clearing           = azurerm_sentinel_alert_rule_scheduled.log_clearing.name
+      log_clearing            = azurerm_sentinel_alert_rule_scheduled.log_clearing.name
     }
     persistence = {
       registry_persistence    = azurerm_sentinel_alert_rule_scheduled.registry_persistence.name
       scheduled_task_creation = azurerm_sentinel_alert_rule_scheduled.scheduled_task_creation.name
     }
   }
-  
+
   # Rule count for monitoring
   total_rule_count = 6
 }

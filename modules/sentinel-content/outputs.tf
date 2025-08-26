@@ -12,7 +12,7 @@ output "tactics_covered" {
   description = "MITRE ATT&CK tactics covered by deployed rules"
   value = [
     "CredentialAccess",
-    "DefenseEvasion", 
+    "DefenseEvasion",
     "Persistence"
   ]
 }

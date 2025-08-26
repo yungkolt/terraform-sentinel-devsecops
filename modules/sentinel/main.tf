@@ -19,7 +19,7 @@ resource "azurerm_sentinel_log_analytics_workspace_onboarding" "this" {
 
 resource "null_resource" "ueba_configuration" {
   count = var.enable_ueba ? 1 : 0
-  
+
   triggers = {
     workspace_id = azurerm_sentinel_log_analytics_workspace_onboarding.this.workspace_id
   }
