@@ -8,7 +8,7 @@ This repository implements a comprehensive **Infrastructure as Code (IaC)** solu
 - **Multi-layered Detection Rules**: MITRE ATT&CK framework-aligned detection rules covering Credential Access, Persistence, Defense Evasion
 - **Automated Incident Response**: Smart automation rules for incident assignment and classification
 - **Proactive Threat Hunting**: Pre-built hunting queries for dormant account reactivation and data staging activities
-- **UEBA Integration**: User Entity Behavior Analytics for anomaly detection
+- **UEBA Integration**: User Entity Behavior Analytics configuration guidance
 - **Security Operations Dashboard**: Real-time SOC visibility with custom workbooks
 
 ### 🚀 **DevSecOps Excellence**
@@ -22,6 +22,33 @@ This repository implements a comprehensive **Infrastructure as Code (IaC)** solu
 - **State Management**: Secure Azure backend with encryption for Terraform state
 - **Resource Tagging**: Comprehensive tagging strategy for cost management and governance
 - **Least Privilege**: RBAC implementation with minimum required permissions
+
+## 🎓 Lessons Learned & Technical Challenges
+
+### **Azure Provider Limitations**
+During development, I encountered several challenges with the Azure Terraform provider's Sentinel support:
+
+- **Resource Availability**: Some Sentinel resources like `azurerm_sentinel_hunting_query` and `azurerm_sentinel_user_analytics_settings` are not yet available in the provider
+- **Workarounds Implemented**: 
+  - Used `azurerm_log_analytics_saved_search` for hunting queries
+  - Implemented workbooks via ARM template deployment
+  - Documented UEBA configuration requirements for manual setup
+- **UUID Requirements**: Automation rules require UUID format for names, not human-readable strings
+
+### **DevSecOps Pipeline Evolution**
+- **Initial Challenge**: Multiple overlapping workflows causing complexity and failures
+- **Solution**: Consolidated into single comprehensive pipeline with proper job dependencies
+- **Result**: Cleaner execution, better error handling, and professional presentation
+
+### **Security Scanning Integration**
+- **Learning**: SARIF integration requires specific output formats and error handling
+- **Implementation**: Added `soft_fail` options and file existence checks to prevent pipeline failures on security findings
+- **Benefit**: Security issues are tracked in GitHub Security tab without breaking builds
+
+### **Cost Optimization Considerations**
+- **Discovery**: Sentinel costs can escalate quickly without proper controls
+- **Mitigation**: Implemented daily quotas, configurable retention, and resource tagging
+- **Best Practice**: Always plan for cost management in cloud security solutions
 
 ## 🏗️ Project Architecture
 
@@ -77,10 +104,11 @@ terraform-sentinel-devsecops/
    terraform apply
    ```
 
-5. **Validate Deployment**
-   ```bash
-   ../../scripts/validate-deployment.sh
-   ```
+5. **Manual Configuration Steps**
+   After deployment, configure these items manually in the Azure portal:
+   - Enable UEBA in Sentinel settings
+   - Configure data connectors (Azure AD, Office 365, Defender for Cloud)
+   - Review and tune detection rules based on your environment
 
 ## 📋 Module Breakdown
 
@@ -93,10 +121,10 @@ Provisions enterprise-grade log analytics workspace with:
 
 ### 🛡️ **Sentinel Module**  
 Enables Microsoft Sentinel with advanced features:
-- **Data Connectors**: Azure AD, Office 365, Defender for Cloud
-- **UEBA Analytics**: Machine learning-based user behavior analysis
-- **Custom Workbooks**: SOC dashboard with real-time metrics
-- **Automation Rules**: Intelligent incident routing and auto-remediation
+- **Core Enablement**: Sentinel workspace onboarding
+- **Automation Rules**: Intelligent incident routing with UUID-compliant naming
+- **Threat Hunting**: Saved searches for proactive threat detection
+- **SOC Dashboard**: Custom workbook via ARM template deployment
 
 ### 🎯 **Detection Rules (MITRE ATT&CK Aligned)**
 Production-ready detection rules organized by tactics:
@@ -130,6 +158,7 @@ Security Scanning Pipeline:
 ├── 🔍 TFSec Scan          → Infrastructure security analysis
 ├── 🛡️ Checkov Scan        → Policy compliance validation  
 ├── 🔑 TruffleHog Scan     → Secret detection
+├── 📝 KQL Validation      → Query syntax verification
 └── 📊 SARIF Upload        → GitHub Security integration
 ```
 
@@ -137,7 +166,7 @@ Security Scanning Pipeline:
 
 ### **Terraform Choice Rationale**
 - **Infrastructure as Code**: Version-controlled, repeatable deployments
-- **Azure Provider Maturity**: Comprehensive resource coverage and active development
+- **Azure Provider Maturity**: Comprehensive resource coverage with active development
 - **Module Reusability**: Scalable architecture across multiple environments
 - **State Management**: Remote state with locking prevents configuration drift
 
@@ -158,7 +187,7 @@ Security Scanning Pipeline:
 - **6 High-Severity Rules**: Critical attack vectors covered
 - **MITRE ATT&CK Mapping**: 6 techniques across 4 tactics
 - **Custom Hunting Queries**: 2 proactive threat hunting scenarios
-- **Automation Rules**: Intelligent incident management
+- **Automation Rules**: Intelligent incident management with UUID compliance
 
 ### **Cost Optimization**
 - **Configurable Retention**: Balance between compliance and cost
@@ -186,4 +215,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Built with ❤️ for Cloud Security Excellence**
+**Built with ❤️ by yungkolt**
+
+*This project demonstrates real-world experience with Azure provider limitations, DevSecOps pipeline design, and enterprise security architecture.*

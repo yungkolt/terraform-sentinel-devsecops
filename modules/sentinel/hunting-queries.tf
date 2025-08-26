@@ -1,10 +1,11 @@
-# Proactive threat hunting queries
+# Hunting Queries - Implemented as Saved Searches
+# Note: azurerm_sentinel_hunting_query is not available, using log analytics saved searches instead
 
-resource "azurerm_sentinel_hunting_query" "dormant_accounts" {
+resource "azurerm_log_analytics_saved_search" "dormant_accounts" {
+  name                       = "DormantAccountReactivation"
   log_analytics_workspace_id = var.workspace_id
-  name                      = "DormantAccountReactivation"
+  category                   = "Threat Hunting"
   display_name              = "Dormant Account Reactivation"
-  description               = "Hunt for accounts that have been dormant and suddenly reactivated"
   
   query = <<-EOQ
     let dormantDays = 90d;
@@ -19,16 +20,20 @@ resource "azurerm_sentinel_hunting_query" "dormant_accounts" {
         | distinct UserPrincipalName
     ) on UserPrincipalName
     | project TimeGenerated, UserPrincipalName, IPAddress, Location, AppDisplayName
+    | extend Tactics = "InitialAccess,Persistence"
   EOQ
 
-  tactics = ["InitialAccess", "Persistence"]
+  tags = {
+    Purpose = "Threat Hunting"
+    Tactics = "InitialAccess,Persistence"
+  }
 }
 
-resource "azurerm_sentinel_hunting_query" "data_staging" {
+resource "azurerm_log_analytics_saved_search" "data_staging" {
+  name                       = "DataStagingActivity"
   log_analytics_workspace_id = var.workspace_id
-  name                      = "DataStagingActivity"
+  category                   = "Threat Hunting"
   display_name              = "Potential Data Staging"
-  description               = "Hunt for unusual file compression activities that may indicate data staging"
   
   query = <<-EOQ
     DeviceFileEvents
@@ -37,7 +42,11 @@ resource "azurerm_sentinel_hunting_query" "data_staging" {
     | summarize FileCount = count(), TotalSize = sum(FileSize) 
     by DeviceName, InitiatingProcessAccountName, bin(TimeGenerated, 1h)
     | where FileCount > 10 or TotalSize > 1073741824
+    | extend Tactics = "Collection,Exfiltration"
   EOQ
 
-  tactics = ["Collection", "Exfiltration"]
+  tags = {
+    Purpose = "Threat Hunting"  
+    Tactics = "Collection,Exfiltration"
+  }
 }
