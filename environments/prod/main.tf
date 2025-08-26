@@ -5,19 +5,24 @@ terraform {
       version = "~> 3.0"
     }
   }
-
-  backend "azurerm" {
-  resource_group_name  = "terraform-state-rg"
-  storage_account_name = "tfstatesentinelprod"
-  container_name       = "tfstate"
-  key                  = "sentinel-prod.terraform.tfstate"
-  use_azuread_auth    = true  # Best practice for authentication
- }
+  
+  required_version = ">= 1.5.0"
 }
 
 provider "azurerm" {
-  features {}
+  features {
+    resource_group {
+      prevent_deletion_if_contains_resources = false
+    }
+    log_analytics_workspace {
+      permanently_delete_on_destroy = false
+    }
+  }
 }
+
+# =============================================================================
+# PRODUCTION ENVIRONMENT RESOURCES
+# =============================================================================
 
 # Resource Group
 resource "azurerm_resource_group" "main" {
@@ -26,7 +31,7 @@ resource "azurerm_resource_group" "main" {
   tags     = var.tags
 }
 
-# Deploy Log Analytics
+# Deploy Log Analytics Workspace
 module "log_analytics" {
   source = "../../modules/log-analytics"
 
@@ -37,20 +42,29 @@ module "log_analytics" {
   daily_quota_gb      = var.daily_quota_gb
   tags                = var.tags
 
+  # Production-grade solutions
   solutions = [
     "Security",
     "SecurityInsights",
     "AzureActivity",
     "Updates",
-    "VMInsights"
+    "VMInsights",
+    "ServiceMap"
   ]
 }
 
-# Deploy Sentinel
+# Deploy Microsoft Sentinel
 module "sentinel" {
   source = "../../modules/sentinel"
 
   workspace_id = module.log_analytics.workspace_id
   location     = azurerm_resource_group.main.location
-  enable_ueba  = true
+  enable_ueba  = var.enable_ueba
+}
+
+# Deploy Sentinel Security Content
+module "sentinel_content" {
+  source = "../../modules/sentinel-content"
+
+  workspace_id = module.sentinel.workspace_id
 }

@@ -1,0 +1,18 @@
+{
+  "ignorePatterns": [
+    {
+      "pattern": "^https://docs.microsoft.com"
+    },
+    {
+      "pattern": "^https://portal.azure.com"
+    },
+    {
+      "pattern": "^https://attack.mitre.org"
+    }
+  ],
+  "timeout": "10s",
+  "retryOn429": true,
+  "retryCount": 3,
+  "fallbackRetryDelay": "30s",
+  "aliveStatusCodes": [200, 206, 299]
+}
